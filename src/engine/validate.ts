@@ -15,9 +15,10 @@ export function validateMission(
 
 export function formatEta(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0s";
-  if (seconds < 60) return `${Math.round(seconds)}s`;
-  const m = Math.floor(seconds / 60);
-  const s = Math.round(seconds % 60);
+  const rounded = Math.round(seconds);
+  if (rounded < 60) return `${rounded}s`;
+  const m = Math.floor(rounded / 60);
+  const s = rounded % 60;
   return `${m}m ${s.toString().padStart(2, "0")}s`;
 }
 

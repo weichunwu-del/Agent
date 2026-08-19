@@ -1,6 +1,11 @@
 import * as Cesium from "cesium";
 import { heightmapTile } from "../engine/terrain";
 
+const moduleUrl = Cesium.buildModuleUrl as typeof Cesium.buildModuleUrl & {
+  setBaseUrl?: (url: string) => void;
+};
+moduleUrl.setBaseUrl?.("/cesium/");
+
 export function createImageryLayer(): Cesium.ImageryLayer {
   const provider = new Cesium.UrlTemplateImageryProvider({
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",

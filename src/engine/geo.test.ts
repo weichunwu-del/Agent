@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { formatEta } from "./validate";
 import {
   bearingDeg,
   haversineMeters,
@@ -50,5 +51,12 @@ describe("geo", () => {
     expect(
       segmentIntersectsPolygon({ lat: 2, lng: 2 }, { lat: 3, lng: 3 }, square),
     ).toBe(false);
+  });
+});
+
+describe("formatEta", () => {
+  it("does not render 1m 60s", () => {
+    expect(formatEta(119.6)).toBe("2m 00s");
+    expect(formatEta(59.4)).toBe("59s");
   });
 });

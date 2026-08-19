@@ -86,7 +86,7 @@ export function buildTrajectory(
   const takeoffSteps = Math.max(2, Math.ceil(takeoffDuration * SAMPLE_HZ));
   for (let i = 0; i <= takeoffSteps; i++) {
     const u = i / takeoffSteps;
-    const altAsl = lerp(mission.homeElevation + 1, takeoffAsl, smooth(u));
+    const altAsl = lerp(mission.homeElevation + 1, takeoffAsl, u);
     const dt = takeoffDuration / takeoffSteps;
     pushSample(
       { lat: first.lat, lng: first.lng, altAsl },
@@ -180,10 +180,6 @@ function emptyTrajectory(): Trajectory {
     minAgl: 0,
     energyWh: 0,
   };
-}
-
-function smooth(u: number): number {
-  return u * u * (3 - 2 * u);
 }
 
 function lerpHeading(a: number, b: number, t: number): number {

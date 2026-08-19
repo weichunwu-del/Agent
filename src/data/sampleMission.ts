@@ -89,8 +89,8 @@ export function createSafeMission(): Mission {
   mission.name = "新建航点路线(16) · 抬升修订";
   mission.waypoints = mission.waypoints.map((w) => ({
     ...w,
-    relativeAlt: Math.max(w.relativeAlt, w.index === 2 ? 130 : w.relativeAlt),
+    relativeAlt: Math.max(w.relativeAlt, w.index === 2 ? 155 : w.relativeAlt),
   }));
-  mission.waypoints[2] = { ...mission.waypoints[2], relativeAlt: 160 };
+  mission.waypoints[2] = { ...mission.waypoints[2], relativeAlt: 185 };
   return mission;
 }

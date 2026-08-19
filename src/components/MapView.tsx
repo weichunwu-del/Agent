@@ -1,6 +1,7 @@
 import * as Cesium from "cesium";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cartesian, createViewer, installWasd, lookOrientation } from "../cesium/setup";
+import { FallbackMap } from "./FallbackMap";
 import { sampleDemoTerrain } from "../engine/terrain";
 import type { GeoZone, SafetyFinding, Sample, Waypoint } from "../engine/types";
 import { useAppStore } from "../store/appStore";
@@ -13,6 +14,7 @@ const WARN = Cesium.Color.fromCssColorString("#f5b942");
 export function MapView() {
   const hostRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<Cesium.Viewer | null>(null);
+  const [mapError, setMapError] = useState<string | null>(null);
   const mapMode = useAppStore((s) => s.mapMode);
   const setMapMode = useAppStore((s) => s.setMapMode);
   const waypoints = useAppStore((s) => s.waypoints);
@@ -24,10 +26,18 @@ export function MapView() {
   const selected = useAppStore((s) => s.selectedWaypoint());
   const sample = useAppStore((s) => s.currentSample());
   const selectedFindingId = useAppStore((s) => s.selectedFindingId);
+  const liveHud = useAppStore((s) => s.playing || s.time > 0.05);
 
   useEffect(() => {
     if (!hostRef.current) return;
-    const viewer = createViewer(hostRef.current);
+    let viewer: Cesium.Viewer;
+    try {
+      viewer = createViewer(hostRef.current);
+    } catch (err) {
+      hostRef.current.innerHTML = "";
+      setMapError(err instanceof Error ? err.message : "三维地图初始化失败");
+      return;
+    }
     viewerRef.current = viewer;
     const removeWasd = installWasd(viewer);
 
@@ -106,12 +116,14 @@ export function MapView() {
     else viewer.scene.morphTo3D(0.5);
   }, [mapMode]);
 
-  const rel = sample?.altAgl ?? selected?.relativeAlt ?? 0;
-  const asl = sample?.altAsl ?? homeElevation + (selected?.relativeAlt ?? 0);
+  const rel = liveHud && sample ? sample.altAgl : (selected?.relativeAlt ?? sample?.altAgl ?? 0);
+  const asl =
+    liveHud && sample ? sample.altAsl : homeElevation + (selected?.relativeAlt ?? sample?.altAgl ?? 0);
 
   return (
     <div className="map-root">
-      <div className="cesium-host" ref={hostRef} />
+      {mapError ? <FallbackMap /> : <div className="cesium-host" ref={hostRef} />}
+      {mapError && <div className="map-fallback">三维地球不可用，已切换二维航迹回退</div>}
       <div className="map-tools">
         <button className="tool" type="button" title="放大" onClick={() => viewerRef.current?.camera.zoomIn(180)}>
           +
