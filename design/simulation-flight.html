@@ -300,76 +300,157 @@
       box-shadow: 0 0 8px var(--green);
     }
 
-    .hud-left {
+    .tele-hud {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 3;
+      top: 12px;
+      left: 12px;
+      z-index: 4;
+      height: 36px;
+      padding: 0 12px;
       display: flex;
       align-items: center;
+      gap: 0;
+      border-radius: 8px;
+      background: rgba(28, 32, 38, 0.72);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.28);
+      backdrop-filter: blur(8px);
+    }
+
+    .tele-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .tele-item svg { flex-shrink: 0; }
+
+    .tele-split {
+      width: 1px;
+      height: 16px;
+      background: rgba(255,255,255,0.45);
+    }
+
+    .hud-cluster {
+      position: absolute;
+      left: 12px;
+      bottom: 10px;
+      z-index: 4;
+      display: flex;
+      align-items: flex-end;
       gap: 8px;
     }
 
-    .compass {
+    .yaw-gauge {
+      position: relative;
+      width: 118px;
+      height: 140px;
+    }
+
+    .yaw-readout {
       position: absolute;
-      left: 16px;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      color: #7CFF6B;
+      font-size: 15px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0 2px 6px rgba(0,0,0,0.7);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .yaw-gauge svg {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 118px;
+      height: 118px;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+    }
+
+    .pitch-gauge {
+      position: relative;
+      width: 52px;
+      height: 152px;
+      margin-bottom: 6px;
+    }
+
+    .pitch-gauge::before {
+      content: "";
+      position: absolute;
+      inset: 4px 10px 4px 14px;
+      border-radius: 8px;
+      background: rgba(8, 12, 20, 0.38);
+    }
+
+    .pitch-ticks,
+    .pitch-green {
+      position: absolute;
+      left: 18px;
+      width: 16px;
+      pointer-events: none;
+    }
+
+    .pitch-ticks {
+      top: 0;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.92) 0 2px,
+        transparent 2px 8px
+      );
+      -webkit-mask-image: linear-gradient(#0000, #000 8%, #000 92%, #0000);
+      mask-image: linear-gradient(#0000, #000 8%, #000 92%, #0000);
+    }
+
+    .pitch-green {
+      top: 50%;
+      height: 44px;
+      transform: translateY(-50%);
+      background: repeating-linear-gradient(
+        to bottom,
+        #9AFF3C 0 2px,
+        transparent 2px 8px
+      );
+      filter: drop-shadow(0 0 5px rgba(154,255,60,0.7));
+    }
+
+    .pitch-badge {
+      position: absolute;
+      left: 1px;
       top: 50%;
       transform: translateY(-50%);
-      z-index: 3;
-      width: 86px;
-      height: 86px;
-    }
-
-    .compass-ring {
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(10,16,28,0.35) 0 28px, transparent 29px),
-        conic-gradient(from -90deg, rgba(62,200,240,0.0), rgba(62,200,240,0.55) 8%, transparent 12% 100%);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-      backdrop-filter: blur(4px);
-      position: relative;
-    }
-
-    .compass-inner {
-      position: absolute;
-      inset: 8px;
-      border-radius: 50%;
-      border: 1px dashed rgba(255,255,255,0.18);
-      background: rgba(8, 14, 24, 0.55);
+      z-index: 2;
+      min-width: 48px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 4px;
+      border: 1px solid #fff;
+      background: rgba(12, 16, 24, 0.86);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-    }
-
-    .yaw-lab { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
-    .yaw-val { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.1; }
-    .yaw-unit { font-size: 10px; color: var(--cyan); }
-
-    .needle {
-      position: absolute;
-      left: 50%;
-      top: 4px;
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-bottom: 10px solid #ff5d6c;
-      transform: translateX(-50%);
-    }
-
-    .n-mark {
-      position: absolute;
-      top: 7px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-42deg);
-      transform-origin: 0 36px;
-      color: #ff5d6c;
-      font-size: 10px;
-      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
     }
 
     /* 3D map overlays */
@@ -624,9 +705,10 @@
 
     .conclusion {
       display: grid;
-      grid-template-columns: 1fr 320px;
+      grid-template-columns: 1fr 252px;
       gap: 12px;
       min-height: 0;
+      align-items: stretch;
     }
 
     .concl-text {
@@ -645,52 +727,41 @@
       font-weight: 700;
     }
 
-    .ai-box {
-      border-radius: 10px;
-      padding: 11px 12px 12px;
-      background:
-        linear-gradient(180deg, rgba(123,140,255,0.16), rgba(16,25,43,0.2) 48%),
-        #10192b;
-      border: 1px solid rgba(123,140,255,0.4);
+    .eval-actions {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
+      gap: 10px;
       min-width: 0;
     }
 
-    .ai-hd {
+    .act-btn {
+      height: 54px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
+      font-size: 14px;
       font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .ai-badge {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: rgba(123,140,255,0.2);
-      color: #c5ccff;
-    }
-
-    .ai-box p {
-      color: #c9d2e4;
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
-    .ai-btn {
-      margin-top: 10px;
-      height: 32px;
-      border-radius: 8px;
-      border: none;
-      background: linear-gradient(90deg, #6f80ff, #4c8dff);
-      color: #fff;
-      font-weight: 700;
-      font-size: 12px;
       letter-spacing: 0.04em;
-      box-shadow: 0 6px 16px rgba(76, 141, 255, 0.28);
+      cursor: default;
+      user-select: none;
+    }
+
+    .act-btn svg { flex-shrink: 0; }
+
+    .act-btn.manual {
+      background: rgba(76, 141, 255, 0.06);
+      border: 1.5px solid #4c8dff;
+      color: #9cc2ff;
+    }
+
+    .act-btn.ai {
+      border: none;
+      color: #fff;
+      background: linear-gradient(90deg, #7b5cff 0%, #4c8dff 100%);
+      box-shadow: 0 8px 20px rgba(76, 141, 255, 0.32);
     }
   </style>
 </head>
@@ -756,20 +827,138 @@
       <section class="center">
         <div class="viewport" id="fpv">
           <img class="bg" src="assets/fpv-highway.png" alt="FPV 视角" />
-          <div class="hud-left">
-            <div class="chip live">飞行中 · GPS</div>
-            <div class="chip"><strong>80</strong> m</div>
-            <div class="chip"><strong>12.0</strong> m/s</div>
+          <div class="tele-hud" title="实时高度 / 速度">
+            <div class="tele-item">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M3 3.2h8" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M7 3.2v8.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M4.2 11.4h5.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              80 m
+            </div>
+            <div class="tele-split"></div>
+            <div class="tele-item">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M7 11.2V3.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M4.1 6.1L7 3.2l2.9 2.9" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 11.4h8" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              12.0 m/s
+            </div>
           </div>
-          <div class="compass" title="当前偏航角">
-            <div class="compass-ring">
-              <div class="needle"></div>
-              <div class="n-mark">N</div>
-              <div class="compass-inner">
-                <div class="yaw-lab">偏航角</div>
-                <div class="yaw-val">042°</div>
-                <div class="yaw-unit">YAW</div>
-              </div>
+          <div class="hud-cluster">
+            <div class="yaw-gauge" title="无人机偏航角 126.9°">
+              <div class="yaw-readout">126.9°</div>
+              <svg viewBox="0 0 140 140" aria-hidden="true">
+        <defs>
+          <radialGradient id="yawBg" cx="50%" cy="46%">
+            <stop offset="0%" stop-color="rgba(18,28,42,0.28)"/>
+            <stop offset="70%" stop-color="rgba(8,12,20,0.62)"/>
+            <stop offset="100%" stop-color="rgba(6,10,16,0.78)"/>
+          </radialGradient>
+        </defs>
+        <circle cx="70" cy="70" r="58" fill="url(#yawBg)" stroke="#8ed7ff" stroke-width="1.7"/>
+        <circle cx="70" cy="70" r="41.5" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <g transform="rotate(-126.9 70 70)">
+          <line x1="70.00" y1="16.00" x2="70.00" y2="25.00" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="70.00" y="34.50" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="11" font-weight="800" font-family="Arial, sans-serif" transform="rotate(0 70.00 34.50)">N</text>
+          <line x1="74.71" y1="16.21" x2="74.43" y2="19.39" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="79.38" y1="16.82" x2="78.42" y2="22.24" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="83.98" y1="17.84" x2="83.15" y2="20.93" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="88.47" y1="19.26" x2="86.59" y2="24.42" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="92.82" y1="21.06" x2="91.47" y2="23.96" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="97.00" y1="23.23" x2="92.50" y2="31.03" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="87.75" y="39.26" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(30 87.75 39.26)">3</text>
+          <line x1="100.97" y1="25.77" x2="99.14" y2="28.39" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="104.71" y1="28.63" x2="101.18" y2="32.85" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="108.18" y1="31.82" x2="105.92" y2="34.08" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="111.37" y1="35.29" x2="107.15" y2="38.82" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="114.23" y1="39.03" x2="111.61" y2="40.86" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="116.77" y1="43.00" x2="108.97" y2="47.50" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="100.74" y="52.25" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(60 100.74 52.25)">6</text>
+          <line x1="118.94" y1="47.18" x2="116.04" y2="48.53" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="120.74" y1="51.53" x2="115.58" y2="53.41" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="122.16" y1="56.02" x2="119.07" y2="56.85" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="123.18" y1="60.62" x2="117.76" y2="61.58" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="123.79" y1="65.29" x2="120.61" y2="65.57" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="124.00" y1="70.00" x2="115.00" y2="70.00" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="105.50" y="70.00" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="11" font-weight="800" font-family="Arial, sans-serif" transform="rotate(90 105.50 70.00)">E</text>
+          <line x1="123.79" y1="74.71" x2="120.61" y2="74.43" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="123.18" y1="79.38" x2="117.76" y2="78.42" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="122.16" y1="83.98" x2="119.07" y2="83.15" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="120.74" y1="88.47" x2="115.58" y2="86.59" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="118.94" y1="92.82" x2="116.04" y2="91.47" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="116.77" y1="97.00" x2="108.97" y2="92.50" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="100.74" y="87.75" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(120 100.74 87.75)">12</text>
+          <line x1="114.23" y1="100.97" x2="111.61" y2="99.14" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="111.37" y1="104.71" x2="107.15" y2="101.18" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="108.18" y1="108.18" x2="105.92" y2="105.92" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="104.71" y1="111.37" x2="101.18" y2="107.15" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="100.97" y1="114.23" x2="99.14" y2="111.61" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="97.00" y1="116.77" x2="92.50" y2="108.97" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="87.75" y="100.74" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(150 87.75 100.74)">15</text>
+          <line x1="92.82" y1="118.94" x2="91.47" y2="116.04" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="88.47" y1="120.74" x2="86.59" y2="115.58" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="83.98" y1="122.16" x2="83.15" y2="119.07" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="79.38" y1="123.18" x2="78.42" y2="117.76" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="74.71" y1="123.79" x2="74.43" y2="120.61" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="70.00" y1="124.00" x2="70.00" y2="115.00" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="70.00" y="105.50" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="11" font-weight="800" font-family="Arial, sans-serif" transform="rotate(180 70.00 105.50)">S</text>
+          <line x1="65.29" y1="123.79" x2="65.57" y2="120.61" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="60.62" y1="123.18" x2="61.58" y2="117.76" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="56.02" y1="122.16" x2="56.85" y2="119.07" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="51.53" y1="120.74" x2="53.41" y2="115.58" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="47.18" y1="118.94" x2="48.53" y2="116.04" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="43.00" y1="116.77" x2="47.50" y2="108.97" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="52.25" y="100.74" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(210 52.25 100.74)">21</text>
+          <line x1="39.03" y1="114.23" x2="40.86" y2="111.61" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="35.29" y1="111.37" x2="38.82" y2="107.15" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="31.82" y1="108.18" x2="34.08" y2="105.92" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="28.63" y1="104.71" x2="32.85" y2="101.18" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="25.77" y1="100.97" x2="28.39" y2="99.14" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="23.23" y1="97.00" x2="31.03" y2="92.50" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="39.26" y="87.75" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(240 39.26 87.75)">24</text>
+          <line x1="21.06" y1="92.82" x2="23.96" y2="91.47" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="19.26" y1="88.47" x2="24.42" y2="86.59" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="17.84" y1="83.98" x2="20.93" y2="83.15" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="16.82" y1="79.38" x2="22.24" y2="78.42" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="16.21" y1="74.71" x2="19.39" y2="74.43" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="16.00" y1="70.00" x2="25.00" y2="70.00" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="34.50" y="70.00" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="11" font-weight="800" font-family="Arial, sans-serif" transform="rotate(270 34.50 70.00)">W</text>
+          <line x1="16.21" y1="65.29" x2="19.39" y2="65.57" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="16.82" y1="60.62" x2="22.24" y2="61.58" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="17.84" y1="56.02" x2="20.93" y2="56.85" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="19.26" y1="51.53" x2="24.42" y2="53.41" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="21.06" y1="47.18" x2="23.96" y2="48.53" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="23.23" y1="43.00" x2="31.03" y2="47.50" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="39.26" y="52.25" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(300 39.26 52.25)">30</text>
+          <line x1="25.77" y1="39.03" x2="28.39" y2="40.86" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="28.63" y1="35.29" x2="32.85" y2="38.82" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="31.82" y1="31.82" x2="34.08" y2="34.08" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="35.29" y1="28.63" x2="38.82" y2="32.85" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="39.03" y1="25.77" x2="40.86" y2="28.39" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="43.00" y1="23.23" x2="47.50" y2="31.03" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity="0.95"/>
+          <text x="52.25" y="39.26" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="9" font-weight="700" font-family="Arial, sans-serif" transform="rotate(330 52.25 39.26)">33</text>
+          <line x1="47.18" y1="21.06" x2="48.53" y2="23.96" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="51.53" y1="19.26" x2="53.41" y2="24.42" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="56.02" y1="17.84" x2="56.85" y2="20.93" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+          <line x1="60.62" y1="16.82" x2="61.58" y2="22.24" stroke="#fff" stroke-width="1.15" stroke-linecap="round" opacity="0.7"/>
+          <line x1="65.29" y1="16.21" x2="65.57" y2="19.39" stroke="#fff" stroke-width="0.8" stroke-linecap="round" opacity="0.42"/>
+        </g>
+        <rect x="68.1" y="8" width="3.8" height="11" rx="1" fill="#7CFF6B"/>
+        <polygon points="70,22 75.2,27.2 73.2,27.2 73.2,33 66.8,33 66.8,27.2 64.8,27.2" fill="#4aa7ff"/>
+        <line x1="11" y1="70" x2="23" y2="70" stroke="#ff3b3b" stroke-width="2.6" stroke-linecap="round"/>
+        <line x1="117" y1="70" x2="129" y2="70" stroke="#ff3b3b" stroke-width="2.6" stroke-linecap="round"/>
+        <g transform="translate(70,72)">
+          <path d="M0,-15.5 L5.2,-1.2 L13.5,5.2 L13.5,7.4 L3.6,3.2 L2.3,13.8 L-2.3,13.8 L-3.6,3.2 L-13.5,7.4 L-13.5,5.2 L-5.2,-1.2 Z" fill="#9fd4f8" stroke="#dff4ff" stroke-width="0.7" stroke-linejoin="round"/>
+          <path d="M0,-15.5 L5.2,-1.2 L3.6,3.2 L2.3,13.8 L0,12.2 Z" fill="#eef8ff"/>
+        </g>
+      </svg>
+            </div>
+            <div class="pitch-gauge" title="云台俯仰角 -10°">
+              <div class="pitch-ticks"></div>
+              <div class="pitch-green"></div>
+              <div class="pitch-badge">-10°</div>
             </div>
           </div>
         </div>
@@ -1008,14 +1197,26 @@
           <div class="concl-text">
             航线主体可飞、目标区域可达，但 K2–K3 段同时存在近桥碰撞、限制空域侵入与巡检高度偏高三类问题，检测有效性不足。
             <span class="warn">存在风险，不建议直接执行。</span>
-            建议先完成航线优化后再进入实飞。
+            请返回手动修改，或使用 AI 一键优化后再进入实飞。
           </div>
-          <div class="ai-box">
-            <div>
-              <div class="ai-hd">AI 优化航线 <span class="ai-badge">存在风险时可用</span></div>
-              <p>根据已识别的碰撞、空域与检测质量风险，自动抬升近桥航段、绕开限制空域并下调巡检高度，减少人工反复改线，直接生成可执行方案。</p>
+          <div class="eval-actions">
+            <div class="act-btn manual">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 20h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <path d="M7 16.5V6.8h7.2L17 9.5V16.5H7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                <path d="M14.2 6.8V9.5H17" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                <path d="M9.2 12.2l5.2-5.2 1.6 1.6-5.2 5.2H9.2v-1.6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              </svg>
+              返回手动修改
             </div>
-            <button class="ai-btn">使用 AI 优化航线</button>
+            <div class="act-btn ai">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3.2l1.15 3.4L16.6 7.8l-3.45 1.2L12 12.4l-1.15-3.4L7.4 7.8l3.45-1.2L12 3.2z" fill="currentColor"/>
+                <path d="M18.2 13.2l.7 2.05 2.1.75-2.1.75-.7 2.05-.7-2.05-2.1-.75 2.1-.75.7-2.05z" fill="currentColor"/>
+                <path d="M6.4 14.1l.55 1.6 1.65.58-1.65.58-.55 1.6-.55-1.6-1.65-.58 1.65-.58.55-1.6z" fill="currentColor"/>
+              </svg>
+              AI 一键优化
+            </div>
           </div>
         </div>
       </div>
