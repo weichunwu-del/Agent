@@ -688,14 +688,25 @@
     }
 
     .dim {
-      padding: 10px 8px 11px;
+      padding: 8px 8px 9px;
       border-radius: 10px;
       background: #0f1728;
       border: 1px solid var(--line);
       text-align: center;
     }
 
-    .dim .name { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .dim .name {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .dim .hint {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
     .stars { color: var(--amber); letter-spacing: 1px; font-size: 13px; }
     .stars .off { color: #3a4458; }
     .score { margin-top: 4px; font-size: 20px; font-weight: 700; }
@@ -1171,17 +1182,20 @@
         </div>
         <div class="dims">
           <div class="dim">
-            <div class="name">可飞性</div>
+            <div class="name">安全飞行</div>
+            <div class="hint">这条航线安不安全</div>
             <div class="stars">★★★★<span class="off">★</span></div>
             <div class="score ok">4.5</div>
           </div>
           <div class="dim">
-            <div class="name">可达性</div>
+            <div class="name">巡检到位</div>
+            <div class="hint">该去的路段到不到</div>
             <div class="stars">★★★★<span class="off">★</span></div>
             <div class="score ok">4.0</div>
           </div>
           <div class="dim">
-            <div class="name">有效性</div>
+            <div class="name">看清隐患</div>
+            <div class="hint">违停、行人看得见吗</div>
             <div class="stars">★★★<span class="off">★★</span></div>
             <div class="score bad">3.0</div>
           </div>
@@ -1195,7 +1209,7 @@
         </div>
         <div class="conclusion">
           <div class="concl-text">
-            航线主体可飞、目标区域可达，但 K2–K3 段同时存在近桥碰撞、限制空域侵入与巡检高度偏高三类问题，检测有效性不足。
+            整体能安全飞行、巡检路段也能到位，但 K2–K3 段近桥过近、进入限制空域，且飞得偏高，隐患看不清。
             <span class="warn">存在风险，不建议直接执行。</span>
             请返回手动修改，或使用 AI 一键优化后再进入实飞。
           </div>
