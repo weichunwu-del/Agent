@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920" />
+  <title>仿真飞行 · 绕城高速 K1-K4 巡检任务</title>
+  <style>
+    :root {
+      --bg: #0a1020;
+      --panel: #121a2b;
+      --panel-2: #161f33;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-2: rgba(255, 255, 255, 0.14);
+      --text: #e8eef8;
+      --muted: #8b97ad;
+      --dim: #667085;
+      --cyan: #3ec8f0;
+      --blue: #4c8dff;
+      --green: #3dce8a;
+      --amber: #f5b942;
+      --red: #ff5d6c;
+      --red-soft: rgba(255, 93, 108, 0.14);
+      --green-soft: rgba(61, 206, 138, 0.14);
+      --cyan-soft: rgba(62, 200, 240, 0.12);
+      --ai: #7b8cff;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "WenQuanYi Micro Hei", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+
+    .app {
+      width: 1920px;
+      height: 1080px;
+      display: grid;
+      grid-template-rows: 52px 1fr 196px;
+      background:
+        radial-gradient(1200px 600px at 70% 10%, rgba(76, 141, 255, 0.08), transparent 50%),
+        radial-gradient(900px 500px at 10% 90%, rgba(62, 200, 240, 0.05), transparent 50%),
+        var(--bg);
+    }
+
+    /* ===== Header ===== */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #141d30 0%, #101827 100%);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #3ec8f0, #4c8dff);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 16px rgba(62, 200, 240, 0.35);
+    }
+
+    .logo svg { width: 16px; height: 16px; }
+
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .title span { color: var(--muted); font-weight: 400; margin: 0 8px; }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line-2);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    /* ===== Main ===== */
+    .main {
+      display: grid;
+      grid-template-columns: 276px 1fr 332px;
+      min-height: 0;
+      gap: 12px;
+      padding: 12px 12px 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .panel-hd {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #d7e2f3;
+      background: linear-gradient(180deg, #1a2438, #141c2e);
+    }
+
+    .panel-hd .sub { font-weight: 400; color: var(--muted); letter-spacing: 0; font-size: 11px; }
+
+    /* ===== Left ===== */
+    .left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .block {
+      padding: 12px 14px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .block:last-child { border-bottom: none; flex: 1; }
+
+    .block-title {
+      font-size: 12px;
+      color: var(--cyan);
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 8px 8px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .kv b { color: var(--text); font-weight: 500; }
+
+    .device-card {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #1a2438, #12192a);
+      border: 1px solid var(--line);
+    }
+
+    .device-card img {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #0c1220;
+    }
+
+    .device-name { font-size: 14px; font-weight: 700; }
+    .device-tag {
+      margin-top: 6px;
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      font-size: 11px;
+    }
+
+    .params {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .param {
+      padding: 10px 10px 9px;
+      border-radius: 8px;
+      background: #0f1728;
+      border: 1px solid var(--line);
+    }
+
+    .param .lab { color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+    .param .val { font-size: 16px; font-weight: 700; color: #f2f7ff; }
+    .param .val em { font-style: normal; font-size: 11px; color: var(--muted); margin-left: 4px; font-weight: 400; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 10px 4px;
+      border-radius: 8px;
+      background: #0f1728;
+      border: 1px solid var(--line);
+    }
+
+    .stat .n { font-size: 16px; font-weight: 700; }
+    .stat .l { margin-top: 3px; color: var(--muted); font-size: 11px; }
+
+    /* ===== Center ===== */
+    .center {
+      display: grid;
+      grid-template-rows: 1fr 1fr 58px;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .viewport {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #071018;
+      min-height: 0;
+    }
+
+    .viewport img.bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .view-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(8, 14, 24, 0.62);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      font-size: 11px;
+      color: #d6e4f5;
+    }
+
+    .chip strong { color: #fff; }
+    .chip.live { color: var(--green); }
+    .chip.live::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 6px;
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    .hud-left {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compass {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 86px;
+      height: 86px;
+    }
+
+    .compass-ring {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(10,16,28,0.35) 0 28px, transparent 29px),
+        conic-gradient(from -90deg, rgba(62,200,240,0.0), rgba(62,200,240,0.55) 8%, transparent 12% 100%);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      position: relative;
+    }
+
+    .compass-inner {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.18);
+      background: rgba(8, 14, 24, 0.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .yaw-lab { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
+    .yaw-val { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.1; }
+    .yaw-unit { font-size: 10px; color: var(--cyan); }
+
+    .needle {
+      position: absolute;
+      left: 50%;
+      top: 4px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 10px solid #ff5d6c;
+      transform: translateX(-50%);
+    }
+
+    .n-mark {
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-42deg);
+      transform-origin: 0 36px;
+      color: #ff5d6c;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* 3D map overlays */
+    .toolbar {
+      position: absolute;
+      left: 10px;
+      top: 44px;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tool {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(10,16,28,0.72);
+      color: #d7e4f5;
+      display: grid;
+      place-items: center;
+      backdrop-filter: blur(6px);
+    }
+
+    .tool.active {
+      background: rgba(62, 200, 240, 0.18);
+      border-color: rgba(62, 200, 240, 0.45);
+      color: var(--cyan);
+    }
+
+    .legend {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 4;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(10,16,28,0.72);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      display: grid;
+      gap: 6px;
+      font-size: 11px;
+      color: #d5e0f0;
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 16px;
+      height: 3px;
+      border-radius: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .route-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Playback */
+    .playbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 0 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .btn {
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 7px;
+      border: 1px solid var(--line-2);
+      background: #1a2438;
+      color: var(--text);
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #2a3d63, #1d2b48);
+      border-color: rgba(76,141,255,0.4);
+    }
+
+    .speeds { display: flex; gap: 4px; margin-left: 8px; }
+    .speeds .btn { padding: 0 8px; min-width: 34px; justify-content: center; }
+    .speeds .btn.on { background: var(--cyan-soft); color: var(--cyan); border-color: rgba(62,200,240,0.4); }
+
+    .progress {
+      position: relative;
+      height: 8px;
+      border-radius: 99px;
+      background: #0d1524;
+      border: 1px solid var(--line);
+    }
+
+    .progress .fill {
+      width: 38%;
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #3dce8a, #3ec8f0);
+    }
+
+    .marks { position: relative; height: 22px; margin-top: 6px; }
+    .mark {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 10px;
+      color: var(--red);
+    }
+    .mark::before {
+      content: "";
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      margin: 0 auto 3px;
+      box-shadow: 0 0 8px var(--red);
+    }
+
+    .play-meta {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: right;
+      line-height: 1.45;
+      white-space: nowrap;
+    }
+
+    .play-meta b { color: var(--text); font-weight: 600; }
+
+    /* ===== Right ===== */
+    .right { display: flex; flex-direction: column; min-height: 0; }
+    .right .list {
+      padding: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .event {
+      padding: 10px 10px 11px;
+      border-radius: 10px;
+      background: #10192b;
+      border: 1px solid var(--line);
+    }
+
+    .event.high { border-color: rgba(255, 93, 108, 0.35); background: linear-gradient(180deg, rgba(255,93,108,0.10), #10192b 70%); }
+    .event.mid { border-color: rgba(245, 185, 66, 0.35); background: linear-gradient(180deg, rgba(245,185,66,0.10), #10192b 70%); }
+
+    .event-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .event-title { font-weight: 700; font-size: 13px; }
+    .event-title em {
+      font-style: normal;
+      color: var(--muted);
+      font-weight: 500;
+      margin-right: 6px;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .tag.high { color: var(--red); background: var(--red-soft); }
+    .tag.mid { color: var(--amber); background: rgba(245,185,66,0.14); }
+
+    .event p { color: #b7c3d6; line-height: 1.5; font-size: 12px; }
+    .event .loc { margin-top: 6px; color: var(--muted); font-size: 11px; }
+
+    /* ===== Eval ===== */
+    .eval {
+      margin: 12px;
+      display: grid;
+      grid-template-columns: 430px 1fr;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .eval-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px 12px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .eval-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .eval-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .eval-title small {
+      margin-left: 10px;
+      font-size: 11px;
+      letter-spacing: 0;
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    .dims {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .dim {
+      padding: 10px 8px 11px;
+      border-radius: 10px;
+      background: #0f1728;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .dim .name { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .stars { color: var(--amber); letter-spacing: 1px; font-size: 13px; }
+    .stars .off { color: #3a4458; }
+    .score { margin-top: 4px; font-size: 20px; font-weight: 700; }
+    .score.ok { color: #7ee0a8; }
+    .score.warn { color: var(--amber); }
+    .score.bad { color: #ff8b96; }
+
+    .conclusion {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .concl-text {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #0f1728;
+      border: 1px solid var(--line);
+      line-height: 1.65;
+      color: #c5d0e0;
+      font-size: 12.5px;
+    }
+
+    .concl-text .warn {
+      display: inline;
+      color: #ff8b96;
+      font-weight: 700;
+    }
+
+    .ai-box {
+      border-radius: 10px;
+      padding: 11px 12px 12px;
+      background:
+        linear-gradient(180deg, rgba(123,140,255,0.16), rgba(16,25,43,0.2) 48%),
+        #10192b;
+      border: 1px solid rgba(123,140,255,0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    .ai-hd {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .ai-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(123,140,255,0.2);
+      color: #c5ccff;
+    }
+
+    .ai-box p {
+      color: #c9d2e4;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .ai-btn {
+      margin-top: 10px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg, #6f80ff, #4c8dff);
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      box-shadow: 0 6px 16px rgba(76, 141, 255, 0.28);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3l2.2 4.6L19 9l-4 3.2L16.2 17 12 14.6 7.8 17 9 12.2 5 9l4.8-1.4L12 3z" fill="#061018"/>
+          </svg>
+        </div>
+        <div class="title">仿真飞行<span>·</span>绕城高速 K1-K4 巡检任务</div>
+      </div>
+      <div class="header-meta">
+        <span class="pill"><span class="dot"></span>仿真回放中</span>
+        <span>任务编号 SIM-20260821-K14</span>
+      </div>
+    </header>
+
+    <section class="main">
+      <aside class="panel left">
+        <div class="panel-hd">基本信息</div>
+        <div class="block">
+          <div class="block-title">任务</div>
+          <div class="kv">
+            <span>任务区域</span><b>绕城高速 K1-K4</b>
+            <span>任务内容</span><b>车辆故障、行人闯入</b>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-title">设备</div>
+          <div class="device-card">
+            <img src="assets/drone-evo.png" alt="多旋翼-EVO" />
+            <div>
+              <div class="device-name">多旋翼-EVO</div>
+              <div class="device-tag">巡检机型</div>
+            </div>
+          </div>
+          <div class="params">
+            <div class="param">
+              <div class="lab">飞行高度</div>
+              <div class="val">80<em>m</em></div>
+            </div>
+            <div class="param">
+              <div class="lab">飞行速度</div>
+              <div class="val">12<em>m/s</em></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-title">航线信息</div>
+          <div class="stats">
+            <div class="stat"><div class="n">32</div><div class="l">航点数量</div></div>
+            <div class="stat"><div class="n">10.2</div><div class="l">航线长度 km</div></div>
+            <div class="stat"><div class="n">08:45</div><div class="l">预计时长</div></div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="center">
+        <div class="viewport" id="fpv">
+          <img class="bg" src="assets/fpv-highway.png" alt="FPV 视角" />
+          <div class="hud-left">
+            <div class="chip live">飞行中 · GPS</div>
+            <div class="chip"><strong>80</strong> m</div>
+            <div class="chip"><strong>12.0</strong> m/s</div>
+          </div>
+          <div class="compass" title="当前偏航角">
+            <div class="compass-ring">
+              <div class="needle"></div>
+              <div class="n-mark">N</div>
+              <div class="compass-inner">
+                <div class="yaw-lab">偏航角</div>
+                <div class="yaw-val">042°</div>
+                <div class="yaw-unit">YAW</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="viewport" id="map3d">
+          <img class="bg" src="assets/map-terrain.png" alt="第三视角" />
+          <div class="view-label">
+            <div class="chip"><strong>第三视角</strong> · 数字孪生</div>
+            <div class="chip">相对高度 80 m</div>
+          </div>
+          <div class="toolbar">
+            <div class="tool active" title="3D">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M12 3v18M4 7.5l8 4.5 8-4.5" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </div>
+            <div class="tool" title="回中">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </div>
+            <div class="tool" title="图层">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 4l8 4-8 4-8-4 8-4zM4 12l8 4 8-4M4 16l8 4 8-4" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </div>
+          </div>
+
+          <svg class="route-svg" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="passed" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#3dce8a"/>
+                <stop offset="100%" stop-color="#3ec8f0"/>
+              </linearGradient>
+              <linearGradient id="future" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#4c8dff"/>
+                <stop offset="100%" stop-color="#7aa4ff"/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="2.2" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Ground projections of waypoints -->
+            <g stroke="#9fb4d0" stroke-opacity="0.35" stroke-width="1.2" fill="#9fb4d0" fill-opacity="0.45">
+              <circle cx="168" cy="268" r="2.5"/>
+              <circle cx="292" cy="250" r="2.5"/>
+              <circle cx="430" cy="238" r="2.5"/>
+              <circle cx="568" cy="228" r="2.5"/>
+              <circle cx="710" cy="216" r="2.5"/>
+              <circle cx="848" cy="198" r="2.5"/>
+              <circle cx="980" cy="176" r="2.5"/>
+              <circle cx="1100" cy="150" r="2.5"/>
+            </g>
+            <path d="M168 268 C 250 256, 360 246, 430 238 S 640 222, 710 216 S 900 190, 980 176 S 1060 160, 1100 150"
+                  fill="none" stroke="#8ea2bd" stroke-opacity="0.28" stroke-width="2"/>
+
+            <!-- Vertical ground lines 对地线 -->
+            <g stroke="#d7e8ff" stroke-dasharray="3 4" stroke-width="1.15" opacity="0.72">
+              <line x1="168" y1="176" x2="168" y2="268"/>
+              <line x1="292" y1="158" x2="292" y2="250"/>
+              <line x1="430" y1="146" x2="430" y2="238"/>
+              <line x1="568" y1="136" x2="568" y2="228"/>
+              <line x1="710" y1="124" x2="710" y2="216"/>
+              <line x1="848" y1="106" x2="848" y2="198"/>
+              <line x1="980" y1="84" x2="980" y2="176"/>
+              <line x1="1100" y1="58" x2="1100" y2="150"/>
+            </g>
+
+            <!-- Air route: passed / current / future -->
+            <path d="M168 176 C 250 164, 360 154, 430 146 S 500 140, 568 136"
+                  fill="none" stroke="url(#passed)" stroke-width="4.2" filter="url(#glow)" stroke-linecap="round"/>
+            <path d="M568 136 C 640 130, 680 128, 710 124"
+                  fill="none" stroke="#3ec8f0" stroke-width="5" filter="url(#glow)" stroke-linecap="round"/>
+            <path d="M710 124 C 780 116, 820 112, 848 106 S 930 92, 980 84 S 1060 68, 1100 58"
+                  fill="none" stroke="url(#future)" stroke-width="3.4" stroke-dasharray="7 6" stroke-linecap="round" opacity="0.9"/>
+
+            <!-- Waypoints in air -->
+            <g>
+              <g>
+                <circle cx="168" cy="176" r="5" fill="#fff"/>
+                <text x="168" y="166" text-anchor="middle" fill="#e8eef8" font-size="12" font-weight="700">P04</text>
+              </g>
+              <g>
+                <circle cx="292" cy="158" r="5" fill="#fff"/>
+                <text x="292" y="148" text-anchor="middle" fill="#e8eef8" font-size="12" font-weight="700">P08</text>
+              </g>
+              <g>
+                <circle cx="430" cy="146" r="5.5" fill="#3ec8f0" stroke="#fff" stroke-width="1.5"/>
+                <text x="430" y="136" text-anchor="middle" fill="#9be9ff" font-size="12" font-weight="700">P12</text>
+              </g>
+              <g>
+                <circle cx="568" cy="136" r="5" fill="#fff"/>
+                <text x="568" y="126" text-anchor="middle" fill="#e8eef8" font-size="12" font-weight="700">P16</text>
+              </g>
+              <g>
+                <circle cx="710" cy="124" r="5" fill="#fff"/>
+                <text x="710" y="114" text-anchor="middle" fill="#e8eef8" font-size="12" font-weight="700">P20</text>
+              </g>
+              <g>
+                <circle cx="848" cy="106" r="5" fill="#d7e2f3"/>
+                <text x="848" y="96" text-anchor="middle" fill="#c9d4e6" font-size="12" font-weight="700">P24</text>
+              </g>
+            </g>
+
+            <!-- Risk points -->
+            <g>
+              <circle cx="292" cy="158" r="8" fill="none" stroke="#ff5d6c" stroke-width="2"/>
+              <circle cx="292" cy="158" r="3.2" fill="#ff5d6c"/>
+              <circle cx="640" cy="130" r="8" fill="none" stroke="#ff5d6c" stroke-width="2"/>
+              <circle cx="640" cy="130" r="3.2" fill="#ff5d6c"/>
+              <circle cx="780" cy="116" r="8" fill="none" stroke="#f5b942" stroke-width="2"/>
+              <circle cx="780" cy="116" r="3.2" fill="#f5b942"/>
+            </g>
+
+            <!-- Drone ON the route at P12 -->
+            <g transform="translate(430,146) rotate(18)">
+              <g filter="url(#glow)">
+                <rect x="-15" y="-5" width="30" height="10" rx="3" fill="#d7dee8"/>
+                <rect x="-22" y="-2.5" width="10" height="5" rx="1.5" fill="#9aa7b8"/>
+                <rect x="12" y="-2.5" width="10" height="5" rx="1.5" fill="#9aa7b8"/>
+                <circle cx="-18" cy="-8" r="3.2" fill="#6b7583"/>
+                <circle cx="18" cy="-8" r="3.2" fill="#6b7583"/>
+                <circle cx="-18" cy="8" r="3.2" fill="#6b7583"/>
+                <circle cx="18" cy="8" r="3.2" fill="#6b7583"/>
+                <circle cx="-18" cy="-8" r="6" fill="none" stroke="#9ad8ff" stroke-width="1" opacity="0.7"/>
+                <circle cx="18" cy="-8" r="6" fill="none" stroke="#9ad8ff" stroke-width="1" opacity="0.7"/>
+                <circle cx="-18" cy="8" r="6" fill="none" stroke="#9ad8ff" stroke-width="1" opacity="0.7"/>
+                <circle cx="18" cy="8" r="6" fill="none" stroke="#9ad8ff" stroke-width="1" opacity="0.7"/>
+                <polygon points="16,0 26,-3 26,3" fill="#3ec8f0"/>
+              </g>
+            </g>
+          </svg>
+
+          <div class="legend">
+            <div><i style="background:linear-gradient(90deg,#3dce8a,#3ec8f0)"></i>已飞航段</div>
+            <div><i style="background:#3ec8f0;height:4px"></i>当前航段</div>
+            <div><i style="background:#4c8dff;border-bottom:1px dashed #9ab8ff"></i>未飞航段</div>
+            <div><i style="background:#ff5d6c;width:8px;height:8px;border-radius:50%"></i>风险点</div>
+            <div><i style="background:transparent;border-left:1px dashed #d7e8ff;width:2px;height:10px"></i>航点对地线</div>
+          </div>
+        </div>
+
+        <div class="playbar">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="btn primary">
+              <svg width="12" height="12" viewBox="0 0 12 12"><rect x="2" y="2" width="3" height="8" fill="currentColor"/><rect x="7" y="2" width="3" height="8" fill="currentColor"/></svg>
+              暂停
+            </div>
+            <div class="btn">重新飞行</div>
+            <div class="speeds">
+              <div class="btn on">1x</div>
+              <div class="btn">2x</div>
+              <div class="btn">4x</div>
+            </div>
+          </div>
+          <div>
+            <div class="progress"><div class="fill"></div></div>
+            <div class="marks">
+              <div class="mark" style="left:18%">01</div>
+              <div class="mark" style="left:38%">02</div>
+              <div class="mark" style="left:58%;color:#f5b942">03</div>
+            </div>
+          </div>
+          <div class="play-meta">
+            已飞 <b>3.8</b> / 10.2 km<br/>剩余 <b>05:21</b>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel right">
+        <div class="panel-hd">实时分析 <span class="sub">已识别 3 项风险</span></div>
+        <div class="list">
+          <article class="event high">
+            <div class="event-hd">
+              <div class="event-title"><em>01</em>碰撞风险</div>
+              <span class="tag high">高风险</span>
+            </div>
+            <p>航线距桥梁结构过近，存在刮擦 / 撞击风险。</p>
+            <div class="loc">邻近航点 P08 · 绕城高速 K1+820</div>
+          </article>
+          <article class="event high">
+            <div class="event-hd">
+              <div class="event-title"><em>02</em>空域风险</div>
+              <span class="tag high">高风险</span>
+            </div>
+            <p>P12–P14 段进入限制空域，不满足当前任务空域批复。</p>
+            <div class="loc">航段 P12–P14 · K2+160 至 K2+540</div>
+          </article>
+          <article class="event mid">
+            <div class="event-hd">
+              <div class="event-title"><em>03</em>检测质量不足</div>
+              <span class="tag mid">中风险</span>
+            </div>
+            <p>巡检高度偏高，算法难以稳定检出车辆故障与行人目标。</p>
+            <div class="loc">航段 P16–P18 · K3 附近</div>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section class="eval">
+      <div class="eval-card">
+        <div class="eval-head">
+          <div class="eval-title">仿真评估<small>● 仿真已完成</small></div>
+          <div class="pill">飞行时长 00:08:45</div>
+        </div>
+        <div class="dims">
+          <div class="dim">
+            <div class="name">可飞性</div>
+            <div class="stars">★★★★<span class="off">★</span></div>
+            <div class="score ok">4.5</div>
+          </div>
+          <div class="dim">
+            <div class="name">可达性</div>
+            <div class="stars">★★★★<span class="off">★</span></div>
+            <div class="score ok">4.0</div>
+          </div>
+          <div class="dim">
+            <div class="name">有效性</div>
+            <div class="stars">★★★<span class="off">★★</span></div>
+            <div class="score bad">3.0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="eval-card">
+        <div class="eval-head">
+          <div class="eval-title">评估结论</div>
+          <div class="pill" style="color:#ff8b96;border-color:rgba(255,93,108,0.35);background:rgba(255,93,108,0.08)">存在风险，不建议直接执行</div>
+        </div>
+        <div class="conclusion">
+          <div class="concl-text">
+            航线主体可飞、目标区域可达，但 K2–K3 段同时存在近桥碰撞、限制空域侵入与巡检高度偏高三类问题，检测有效性不足。
+            <span class="warn">存在风险，不建议直接执行。</span>
+            建议先完成航线优化后再进入实飞。
+          </div>
+          <div class="ai-box">
+            <div>
+              <div class="ai-hd">AI 优化航线 <span class="ai-badge">存在风险时可用</span></div>
+              <p>根据已识别的碰撞、空域与检测质量风险，自动抬升近桥航段、绕开限制空域并下调巡检高度，减少人工反复改线，直接生成可执行方案。</p>
+            </div>
+            <button class="ai-btn">使用 AI 优化航线</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
