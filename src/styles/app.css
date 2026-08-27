@@ -561,7 +561,7 @@ header {
   text-align: center;
 }
 .dim .name { color: var(--text); font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-.dim .hint { color: var(--muted); font-size: 11px; margin-bottom: 6px; line-height: 1.35; }
+.hint { color: var(--muted); font-size: 11px; margin-bottom: 6px; line-height: 1.35; max-height: 2.8em; overflow: hidden; }
 .stars { color: var(--amber); letter-spacing: 1px; font-size: 13px; }
 .stars .off { color: #3a4458; }
 .score { margin-top: 4px; font-size: 20px; font-weight: 700; }
@@ -593,7 +593,8 @@ header {
   gap: 10px;
 }
 .act-btn {
-  height: 54px;
+  height: 48px;
+  min-height: 48px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -650,6 +651,7 @@ header {
   background: #10192b;
   text-align: left;
   color: inherit;
+  cursor: pointer;
 }
 .wp-item.sel { border-color: var(--cyan); }
 .wp-item .idx { color: var(--cyan); font-weight: 700; }

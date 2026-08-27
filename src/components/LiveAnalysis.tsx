@@ -1,10 +1,20 @@
 import { DIMENSION_META } from "../engine/analysis";
 import { useAppStore } from "../store/appStore";
+import { useMemo } from "react";
 
 const LEVEL_LABEL = { high: "高风险", mid: "中风险", low: "低风险", pass: "通过" } as const;
 
 export function LiveAnalysis() {
-  const events = useAppStore((s) => s.visibleEvents());
+  const evaluation = useAppStore((s) => s.evaluation);
+  const time = useAppStore((s) => s.time);
+  const playing = useAppStore((s) => s.playing);
+  const duration = useAppStore((s) => s.result?.trajectory.duration ?? 0);
+  const events = useMemo(() => {
+    if (!evaluation) return [];
+    const done = !playing && time >= duration - 1e-3;
+    if (done) return evaluation.events;
+    return evaluation.events.filter((e) => (e.t ?? 0) <= time + 0.05);
+  }, [evaluation, time, playing, duration]);
   const selected = useAppStore((s) => s.selectedEventId);
   const selectEvent = useAppStore((s) => s.selectEvent);
   const riskCount = events.filter((e) => e.level !== "pass").length;

@@ -18,14 +18,14 @@ function stars(n: number) {
 
 export function EvaluationBar() {
   const evaluation = useAppStore((s) => s.evaluation);
-  const phase = useAppStore((s) => s.phase());
+  const playing = useAppStore((s) => s.playing);
   const time = useAppStore((s) => s.time);
+  const duration = useAppStore((s) => s.result?.trajectory.duration ?? 0);
   const returnToEditor = useAppStore((s) => s.returnToEditor);
   const runAiOptimize = useAppStore((s) => s.runAiOptimize);
   const optimizing = useAppStore((s) => s.optimizing);
   const note = useAppStore((s) => s.optimizeNote);
-  const duration = evaluation?.duration ?? 0;
-  const complete = phase === "complete";
+  const complete = !playing && duration > 0 && time >= duration - 1e-3;
   const hasRisk = evaluation ? evaluation.verdict !== "pass" : false;
 
   if (!evaluation) return null;
@@ -71,10 +71,7 @@ export function EvaluationBar() {
           </div>
         </div>
         <div className="conclusion">
-          <div className="concl-text">
-            {evaluation.summary}{" "}
-            {hasRisk && <span className="warn">{evaluation.verdictLabel}。</span>}
-          </div>
+          <div className="concl-text">{evaluation.summary}</div>
           <div className="eval-actions">
             <button className="act-btn manual" type="button" onClick={returnToEditor} disabled={!complete}>
               返回手动修改

@@ -8,8 +8,15 @@ const PHASE_LABEL = {
 
 export function Header() {
   const mission = useAppStore((s) => s.mission);
-  const phase = useAppStore((s) => s.phase());
+  const playing = useAppStore((s) => s.playing);
+  const time = useAppStore((s) => s.time);
+  const duration = useAppStore((s) => s.result?.trajectory.duration ?? 0);
   const openEditor = useAppStore((s) => s.openEditor);
+  const phase: keyof typeof PHASE_LABEL = playing
+    ? "running"
+    : duration > 0 && time >= duration - 1e-3
+      ? "complete"
+      : "playback";
 
   return (
     <header>

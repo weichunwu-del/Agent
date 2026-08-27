@@ -54,15 +54,15 @@ export const DIMENSION_META: Record<
 > = {
   safety: {
     displayName: "全程安全",
-    caption: "从起飞到降落，会不会撞、会不会贴太近、高度速度过不过线",
+    caption: "会不会撞、贴太近、高度速度过线",
   },
   reachability: {
     displayName: "航点都能到",
-    caption: "电够不够飞完这条线，有没有被禁飞/限制空域挡住",
+    caption: "电够不够飞完，空域挡不挡",
   },
   effectiveness: {
     displayName: "巡检完整有效",
-    caption: "该巡的区域巡全了没有，拍出来的画面算法认不认得",
+    caption: "区域巡全了吗，画面算法认不认",
   },
 };
 

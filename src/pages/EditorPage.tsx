@@ -105,11 +105,18 @@ export function EditorPage() {
           )}
           <div className="wp-list">
             {mission.waypoints.map((w) => (
-              <button
+              <div
                 key={w.id}
-                type="button"
                 className={`wp-item ${w.id === selectedId ? "sel" : ""}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => select(w.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    select(w.id);
+                  }
+                }}
               >
                 <div className="idx">P{String(w.index).padStart(2, "0")}</div>
                 <div>
@@ -130,7 +137,7 @@ export function EditorPage() {
                 >
                   删
                 </button>
-              </button>
+              </div>
             ))}
           </div>
         </aside>
